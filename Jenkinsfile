@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/newproject/netflix-clone-react-typescript.git'
+                git branch: 'main', url: 'https://github.com/naga-143-ctr/netfilix1.git'
             }
         }
 
@@ -35,18 +35,6 @@ pipeline {
             }
         }
          
-        stage('Docker Hub Login & Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKERHUB_REPO}:${IMAGE_TAG}
-                        docker push ${DOCKERHUB_REPO}:${IMAGE_TAG}
-                        docker logout
-                    '''
-                }
-            }
-        }
     }
 }
     
