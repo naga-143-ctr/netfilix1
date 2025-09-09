@@ -1,184 +1,215 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>StreamFlix — Static Front Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <title>Hotstar‑Style Clone · Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0b0b0b; --card:#141414; --muted:#b3b3b3; --accent:#e50914; --glass: rgba(255,255,255,0.04);
-      --max-width:1200px;
+      --bg:#0b1020;       /* deep navy */
+      --panel:#121833;    /* card bg */
+      --ink:#e6e8ef;      /* text */
+      --muted:#9aa3b2;    /* secondary text */
+      --brand:#4f7cff;    /* accent */
+      --brand-2:#10b981;  /* secondary accent */
+      --radius:18px;
+      --spacing:14px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:linear-gradient(180deg,#050505 0%, #071017 100%);color:#fff}
-    .container{max-width:var(--max-width);margin:0 auto;padding:24px}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,segoe ui,roboto,ubuntu;}
+    a{color:inherit;text-decoration:none}
+    .app{max-width:1200px;margin:0 auto;padding:12px 20px 48px}
 
     /* NAV */
-    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{font-weight:800;font-size:22px;color:var(--accent);letter-spacing:1px}
-    nav{display:flex;gap:18px;align-items:center}
-    nav a{color:var(--muted);text-decoration:none;font-size:14px}
-
-    /* search & profile */
-    .tools{display:flex;gap:12px;align-items:center}
-    .search{background:var(--glass);border-radius:6px;padding:6px 10px;display:flex;gap:8px;align-items:center}
-    .search input{background:transparent;border:0;outline:none;color:#fff;width:200px}
-    .avatar{width:36px;height:36px;border-radius:4px;background:linear-gradient(135deg,#333,#111);display:inline-block}
+    .nav{display:flex;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
+    .logo-badge{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#6ee7ff)}
+    .nav-links{display:flex;gap:14px;margin-left:10px;flex-wrap:wrap}
+    .nav-links a{padding:8px 12px;border-radius:999px;background:transparent;color:var(--muted);font-weight:600}
+    .nav-links a.active,.nav-links a:hover{background:#1a2247;color:var(--ink)}
+    .nav-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .search{display:flex;align-items:center;gap:8px;background:#0e1533;border:1px solid #1f2a52;border-radius:999px;padding:8px 12px;min-width:180px}
+    .search input{background:transparent;border:0;outline:none;color:var(--ink);width:100%}
+    .btn{border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--brand);color:white}
+    .btn:hover{filter:brightness(1.08)}
 
     /* HERO */
-    .hero{margin-top:18px;position:relative;border-radius:10px;overflow:hidden}
-    .hero img{width:100%;height:420px;object-fit:cover;display:block;filter:brightness(0.55)}
-    .hero .meta{position:absolute;left:36px;bottom:36px}
-    .title{font-size:40px;font-weight:800;margin:0}
-    .subtitle{color:var(--muted);margin-top:8px}
-    .hero .cta{margin-top:14px;display:flex;gap:12px}
-    .btn{background:#fff;color:#000;padding:10px 18px;border-radius:6px;font-weight:600;border:0;cursor:pointer}
-    .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.12)}
+    .hero{margin-top:18px;background:linear-gradient(180deg,rgba(29,44,91,.9),rgba(11,16,32,0.4)), url('https://images.unsplash.com/photo-1517602302552-471fe67acf66?q=80&w=1600&auto=format&fit=crop');
+      background-size:cover;background-position:center;border-radius:var(--radius);padding:28px}
+    .hero-inner{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
+    .hero h1{margin:0 0 8px;font-size:34px}
+    .hero p{margin:0 0 16px;color:var(--muted)}
+    .tag{display:inline-flex;gap:8px;align-items:center;background:#11193c;border:1px solid #20306a;color:#dfe6ff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .hero .actions{display:flex;gap:12px;margin-top:16px}
+    .hero .poster{width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;position:relative;border:1px solid #26335f}
+    .hero .poster iframe, .hero .poster img{width:100%;height:100%;display:block}
 
-    /* Rows */
-    .row{margin-top:26px}
-    .row h3{margin:0 0 12px 6px;font-size:18px}
-    .cards{display:flex;gap:12px;overflow:auto;padding-bottom:6px}
-    .card{min-width:170px;background:var(--card);border-radius:6px;overflow:hidden;cursor:pointer;flex:0 0 auto;transition:transform .18s ease, box-shadow .18s ease}
-    .card img{width:100%;height:100%;display:block;object-fit:cover}
-    .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.6)}
-    .card .label{padding:8px;font-size:13px;color:var(--muted)}
+    /* ROW */
+    .row{margin-top:28px}
+    .row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .row-title{font-size:20px;font-weight:800}
+    .scroller{display:grid;grid-auto-flow:column;grid-auto-columns:calc(25% - 12px);gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+    .card{scroll-snap-align:start;background:var(--panel);border-radius:14px;overflow:hidden;border:1px solid #222a4f;position:relative}
+    .thumb{aspect-ratio:16/9;background:#141a39;position:relative}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .badge{position:absolute;top:8px;left:8px;background:#0c132fbd;border:1px solid #2a3770;color:#cfe3ff;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .meta{padding:10px}
+    .title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:.25s}
+    .card:hover .play{opacity:1;background:linear-gradient(180deg,rgba(0,0,0,0) 20%,rgba(0,0,0,.45))}
+    .play .playbtn{width:54px;height:54px;border-radius:999px;background:rgba(255,255,255,.1);backdrop-filter:blur(4px);border:1px solid #8aa2ff;display:grid;place-items:center;font-weight:800}
 
-    /* modal */
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;padding:20px}
-    .modal.active{display:flex}
-    .modal .panel{width:90%;max-width:1000px;background:#0b0b0b;border-radius:10px;overflow:hidden}
-    .modal .poster{height:480px;background-size:cover;background-position:center}
-    .modal .content{padding:18px}
-    .close{position:absolute;right:24px;top:20px;background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer}
+    /* FOOTER */
+    .foot{margin-top:36px;color:#9aa3b2;font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-    /* responsive */
-    @media (max-width:800px){
-      .hero img{height:260px}
-      .title{font-size:24px}
-      .search input{width:110px}
-      .card{min-width:130px}
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero-inner{grid-template-columns:1fr}
+      .scroller{grid-auto-columns:calc(33.333% - 10px)}
+    }
+    @media (max-width: 680px){
+      .nav-right{width:100%;margin-top:10px}
+      .scroller{grid-auto-columns:75%}
+      .hero h1{font-size:26px}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">STREAMFLIX</div>
-        <nav>
-          <a href="#">Home</a>
-          <a href="#">TV Shows</a>
-          <a href="#">Movies</a>
-          <a href="#">New & Popular</a>
-        </nav>
+  <div class="app">
+    <!-- NAV -->
+    <div class="nav">
+      <div class="logo">
+        <div class="logo-badge"></div>
+        <span>Hotstart<span style="opacity:.7">· Demo</span></span>
       </div>
-
-      <div class="tools">
-        <div class="search" aria-label="search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <input placeholder="Search" />
+      <div class="nav-links">
+        <a class="active" href="#">Home</a>
+        <a href="#latest">Latest</a>
+        <a href="#movies">Movies</a>
+        <a href="#shows">Shows</a>
+        <a href="#sports">Sports</a>
+      </div>
+      <div class="nav-right">
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input id="q" placeholder="Search titles" />
         </div>
-        <div class="avatar" title="Profile"></div>
+        <button class="btn">Subscribe</button>
       </div>
-    </header>
+    </div>
 
-    <section class="hero">
-      <img src="https://picsum.photos/1200/520?random=101" alt="Hero backdrop"/>
-      <div class="meta">
-        <h1 class="title">The Last Horizon</h1>
-        <div class="subtitle">2019 • Sci-fi, Adventure • 2h 14m</div>
-        <div class="cta">
-          <button class="btn" id="play-hero">Play</button>
-          <button class="btn ghost" id="more-hero">More Info</button>
+    <!-- HERO -->
+    <section class="hero" id="latest">
+      <div class="hero-inner">
+        <div>
+          <span class="tag">FEATURED · 4K HDR</span>
+          <h1>Galactic Frontier</h1>
+          <p>Across the rim of known space, a crew faces impossible choices. Watch the brand‑new season now.</p>
+          <div class="actions">
+            <button class="btn" onclick="alert('Play clicked')">▶ Play</button>
+            <button class="btn" style="background:var(--brand-2)" onclick="alert('Added to watchlist')">＋ Watchlist</button>
+          </div>
+        </div>
+        <div class="poster">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </section>
 
-    <!-- rows of cards -->
-    <div class="row">
-      <h3>Because you watched: Space Operas</h3>
-      <div class="cards" id="row-1"></div>
-    </div>
-
-    <div class="row">
-      <h3>Trending Now</h3>
-      <div class="cards" id="row-2"></div>
-    </div>
-
-    <div class="row">
-      <h3>New Releases</h3>
-      <div class="cards" id="row-3"></div>
-    </div>
-
-  </div>
-
-  <!-- modal -->
-  <div class="modal" id="modal">
-    <div class="panel">
-      <button class="close" id="close">✕</button>
-      <div class="poster" id="modal-poster" style="background-image:url('https://picsum.photos/1000/600?random=200')"></div>
-      <div class="content">
-        <h2 id="modal-title">Title</h2>
-        <p id="modal-desc" style="color:var(--muted)">Description goes here. This is a static demo of a Netflix-like front page. Click outside or press the close button to dismiss.</p>
-        <div style="margin-top:12px"><button class="btn">Play</button><button class="btn ghost" style="margin-left:8px">Add to List</button></div>
+    <!-- ROWS -->
+    <section class="row" id="movies">
+      <div class="row-head">
+        <div class="row-title">Trending Movies</div>
+        <a href="#" style="color:var(--brand)">See all</a>
       </div>
-    </div>
+      <div class="scroller" id="row-trending"></div>
+    </section>
+
+    <section class="row" id="shows">
+      <div class="row-head">
+        <div class="row-title">Top Shows</div>
+        <a href="#" style="color:var(--brand)">See all</a>
+      </div>
+      <div class="scroller" id="row-shows"></div>
+    </section>
+
+    <section class="row" id="sports">
+      <div class="row-head">
+        <div class="row-title">Live Sports</div>
+        <a href="#" style="color:var(--brand)">Scores</a>
+      </div>
+      <div class="scroller" id="row-sports"></div>
+    </section>
+
+    <footer class="foot">
+      <div>© 2025 Hotstart Demo — educational sample UI.</div>
+      <div>Replace images/video with your own assets before publishing.</div>
+    </footer>
   </div>
 
   <script>
-    // sample dataset
-    const sample = Array.from({length:18}).map((_,i)=>({
-      id:i+1,
-      title:['Skyward','Night Pulse','Deep Sea','The Last Horizon','Red Signal','Afterglow'][i%6] + ' '+(i+1),
-      img:`https://picsum.photos/300/170?random=${30+i}`,
-      poster:`https://picsum.photos/1000/600?random=${200+i}`,
-      desc:'A thrilling story of adventure and discovery. This is placeholder text for the static demo.'
-    }))
+    // --- demo data ---
+    const movies = [
+      {t:'Skyfalling', sub:'Action · 2h 01m', img:'https://images.unsplash.com/photo-1502139214989-daddf2fcf0f2?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Neon Drift', sub:'Sci‑Fi · 1h 48m', img:'https://images.unsplash.com/photo-1495562569060-2eec283d3391?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Silent Harbor', sub:'Thriller · 1h 36m', img:'https://images.unsplash.com/photo-1495567720989-cebdbdd97913?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Crimson Crown', sub:'Drama · 2h 22m', img:'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Star Forge', sub:'Adventure · 2h 10m', img:'https://images.unsplash.com/photo-1520975922325-24f352b3b1c7?q=80&w=1200&auto=format&fit=crop'}
+    ];
+    const shows = [
+      {t:'Quantum Alley', sub:'S3 · New Episode', img:'https://images.unsplash.com/photo-1524255684952-d7185b509571?q=80&w=1200&auto=format&fit=crop'},
+      {t:'The Archivist', sub:'S1 · Binge', img:'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Echoes', sub:'S2 · Finale', img:'https://images.unsplash.com/photo-1495567720989-cebdbdd97913?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Metro Lines', sub:'S4 · Trending', img:'https://images.unsplash.com/photo-1461782296612-48c4e56df7e9?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Dust & Gold', sub:'S1 · New', img:'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1200&auto=format&fit=crop'}
+    ];
+    const sports = [
+      {t:'Cricket Highlights', sub:'ODI · Replay', img:'https://images.unsplash.com/photo-1565058528608-887b02bde487?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Football Tonight', sub:'Live 22:00', img:'https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Formula Rush', sub:'Quali · Live', img:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop'},
+      {t:'Badminton Open', sub:'SF · Live', img:'https://images.unsplash.com/photo-1521417531039-95d1c80b2b5e?q=80&w=1200&auto=format&fit=crop'}
+    ];
 
-    function makeCard(item){
-      const el = document.createElement('div')
-      el.className='card'
-      el.innerHTML = `<img src="${item.img}" alt="${item.title}" loading="lazy">` +
-                     `<div class="label">${item.title}</div>`
-      el.addEventListener('click',()=>openModal(item))
-      return el
+    function card(item){
+      return `
+        <article class="card">
+          <div class="thumb">
+            <img src="${item.img}" alt="${item.t}" loading="lazy"/>
+            <span class="badge">HD</span>
+            <div class="play"><div class="playbtn">▶</div></div>
+          </div>
+          <div class="meta">
+            <div class="title" title="${item.t}">${item.t}</div>
+            <div class="sub">${item.sub}</div>
+          </div>
+        </article>
+      `;
     }
 
-    // populate rows
-    const row1 = document.getElementById('row-1')
-    const row2 = document.getElementById('row-2')
-    const row3 = document.getElementById('row-3')
-    sample.slice(0,6).forEach(i=>row1.appendChild(makeCard(i)))
-    sample.slice(6,12).forEach(i=>row2.appendChild(makeCard(i)))
-    sample.slice(12).forEach(i=>row3.appendChild(makeCard(i)))
+    document.getElementById('row-trending').innerHTML = movies.map(card).join('');
+    document.getElementById('row-shows').innerHTML    = shows.map(card).join('');
+    document.getElementById('row-sports').innerHTML   = sports.map(card).join('');
 
-    // modal behavior
-    const modal = document.getElementById('modal')
-    const modalPoster = document.getElementById('modal-poster')
-    const modalTitle = document.getElementById('modal-title')
-    const modalDesc = document.getElementById('modal-desc')
-    const closeBtn = document.getElementById('close')
-
-    function openModal(item){
-      modalPoster.style.backgroundImage = `url(${item.poster})`
-      modalTitle.textContent = item.title
-      modalDesc.textContent = item.desc
-      modal.classList.add('active')
-    }
-    function closeModal(){ modal.classList.remove('active') }
-
-    closeBtn.addEventListener('click',closeModal)
-    modal.addEventListener('click',(e)=>{ if(e.target===modal) closeModal() })
-
-    // hero buttons
-    document.getElementById('more-hero').addEventListener('click',()=>openModal(sample[3]))
-    document.getElementById('play-hero').addEventListener('click',()=>alert('Pretend playing trailer...'))
-
-    // keyboard escape
-    window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal() })
+    // simple search filter (client‑side demo)
+    const q = document.getElementById('q');
+    q.addEventListener('input',()=>{
+      const term = q.value.toLowerCase();
+      const data = [...movies, ...shows, ...sports];
+      const filtered = data.filter(x => x.t.toLowerCase().includes(term));
+      if(term){
+        document.getElementById('row-trending').innerHTML = filtered.map(card).join('');
+        document.getElementById('row-shows').innerHTML = '';
+        document.getElementById('row-sports').innerHTML = '';
+      }else{
+        document.getElementById('row-trending').innerHTML = movies.map(card).join('');
+        document.getElementById('row-shows').innerHTML    = shows.map(card).join('');
+        document.getElementById('row-sports').innerHTML   = sports.map(card).join('');
+      }
+    });
   </script>
 </body>
 </html>
